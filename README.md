@@ -1,126 +1,123 @@
-# 🌪️ 香港台风数据蒲公英可视化项目
+# 🌪️ Hong Kong Typhoon Data Dandelion Visualization Project
 
-## 📖 项目简介
+## 📖 Project Overview
 
-这个项目以蒲公英的形态来可视化2014-2024年香港天文台的热带气旋数据，创造性地将自然形态与数据可视化相结合。项目灵感来源于蒲公英种子随风传播的特性，象征着台风在海洋上的形成与移动。
+This project visualizes Hong Kong Observatory's tropical cyclone data from 2014-2024 in the form of dandelions, creatively combining natural forms with data visualization. The project draws inspiration from how dandelion seeds spread with the wind, symbolizing the formation and movement of typhoons across the ocean.
 
-### ✨ 主要特色
-- 🌱 **蒲公英形态设计**: 主干代表年份，分支代表月份，末端圆圈表示台风强度
-- 📊 **多年数据**: 支持2014-2024年数据对比分析
-- 📊 **动态更新**: 支持实时数据爬取和可视化更新
-- 🎬 **多种模式**: 静态图、生长动画、交互式探索
-- 🎭 **动态交互**: 包含生长动画和交互式摆动效果, 支持悬停查看详情，点击获取更多信息
+### ✨ Key Features
+- 🌱 **Dandelion Design**: Main stem represents years, branches represent months, end circles indicate typhoon intensity
+- 📊 **Multi-year Data**: Supports comparative analysis of 2014-2024 data
+- 📊 **Dynamic Updates**: Supports real-time data crawling and visualization updates
+- 🎬 **Multiple Modes**: Static charts, growth animations, interactive exploration
+- 🎭 **Dynamic Interaction**: Includes growth animations and interactive swaying effects, supports hover for details, click for more information
 
+## 🚀 Quick Start
 
-## 🚀 快速开始
+### Core Dependencies
+- **Python 3.8+** - Main programming language
+- **matplotlib 3.5+** - Core data visualization library
+- **pandas 1.3+** - Data processing and analysis
+- **numpy 1.21+** - Numerical computation support
+- **requests 2.25+** - HTTP requests and data crawling
 
-### 核心依赖
-- **Python 3.8+** - 主要编程语言
-- **matplotlib 3.5+** - 数据可视化核心库
-- **pandas 1.3+** - 数据处理和分析
-- **numpy 1.21+** - 数值计算支持
-- **requests 2.25+** - HTTP请求和数据爬取
+## 📦 Installation Guide
 
-
-
-## 📦 安装指南
-
-### 1. 克隆项目
+### 1. Clone the Project
 ```bash
 git clone https://github.com/yourusername/typhoon-dandelion-viz.git
 cd typhoon-dandelion-viz
 ```
 
-### 2. 创建虚拟环境
+### 2. Create Virtual Environment
 ```bash
 python -m venv typhoon_env
 source typhoon_env/bin/activate  # Linux/Mac
-# 或
+# or
 typhoon_env\Scripts\activate     # Windows
 ```
 
-### 3. 安装依赖
+### 3. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. 运行程序
+### 4. Run the Program
 ```bash
 python typhoon_dandelion.py
 ```
 
-## 🌐 数据来源
+## 🌐 Data Sources
 
-### 香港天文台官方网站
+### Hong Kong Observatory Official Website
 
 URL: https://www.hko.gov.hk/tc/publica/pubtc.htm
-数据类型: PDF年度台风报告
-覆盖年份: 2014-2024年
-数据内容: 台风名称、编号、形成日期、强度、等级等
+Data Type: PDF annual typhoon reports
+Coverage Years: 2014-2024
+Data Content: Typhoon names, numbers, formation dates, intensity, categories, etc.
 
-### 数据获取流程
-1. 自动访问香港天文台年报列表页面
-2. 识别并下载对应年份的PDF报告
-3. 使用pdfplumber解析PDF内容
-4. 提取台风基本信息和统计数据
-5. 数据清洗、去重和格式化
-6. 本地缓存以提升后续访问速度
+### Data Acquisition Process
+1. Automatically access Hong Kong Observatory annual report list page
+2. Identify and download PDF reports for corresponding years
+3. Use pdfplumber to parse PDF content
+4. Extract basic typhoon information and statistical data
+5. Data cleaning, deduplication, and formatting
+6. Local caching to improve subsequent access speed
 
-## 🎨 可视化设计
+## 🎨 Visualization Design
 
-### 设计理念
-- **主干**: 2025年时间轴，从下往上生长
-- **粗分支**: 12个月份，呈放射状分布
-- **细分支**: 具体台风事件，包含日期、编号、名称
-- **圆圈大小**: 反映台风风级强度
-- **颜色编码**: 区分实际数据与预测数据
+### Design Philosophy
+- **Main Stem**: 2025 timeline, growing from bottom to top
+- **Major Branches**: 12 months, arranged radially
+- **Minor Branches**: Specific typhoon events, including dates, numbers, names
+- **Circle Size**: Reflects typhoon wind scale intensity
+- **Color Coding**: Distinguishes between actual data and predicted data
 
-### 视觉元素
-系统采用柔和自然的色彩方案：
+### Visual Elements
+The system uses a soft, natural color scheme:
 ```python
 colors = {
-    'prediction': '#90EE90',  # 浅绿色 - 预测数据
-    'actual': '#255751',      # 深绿色 - 实际数据
-    'stem': '#659B4C',       # 中绿色，年份分支强调色
-    'stem': '#EDA071',        # 柔和橙色，台风等级辅助色
-    'stem': '#85C8BC',        # 青绿色，热带风暴
-    'background': '#FEFAEF'   # 温暖的米白色背景主色调
+    'prediction': '#90EE90',  # Light green - predicted data
+    'actual': '#255751',      # Dark green - actual data
+    'stem': '#659B4C',       # Medium green, year branch accent color
+    'stem': '#EDA071',        # Soft orange, typhoon grade auxiliary color
+    'stem': '#85C8BC',        # Teal green, tropical storm
+    'background': '#FEFAEF'   # Warm off-white background main color
 }
 ```
 
+### Layout Rules
+- A4 ratio (297:210)
+- Central radial layout
+- Legend and scale in bottom left corner
+- Data update time in bottom right corner
 
-### 布局规则
-- A4比例 (297:210)
-- 中心辐射布局
-- 左下角图例和比例尺
-- 右下角数据更新时间
+## 🎬 Animation Features
 
-## 🎬 动画功能
-
-### 1. 生长动画
+### 1. Growth Animation
 ```python
 def create_growth_animation():
-    """模拟蒲公英生长过程"""
-    # 逐步绘制主干
-    # 依次展开月份分支
-    # 最后显示台风数据点
+    """Simulate dandelion growth process"""
+    # Gradually draw main stem
+    # Sequentially expand monthly branches
+    # Finally display typhoon data points
 ```
 
-### 2. 摆动效果
+### 2. Swaying Effect
 ```python
 def add_swaying_effect():
-    """添加随风摆动效果"""
-    # 使用三角函数模拟自然摆动
-    # 根据风级调整摆动幅度
+    """Add wind swaying effect"""
+    # Use trigonometric functions to simulate natural swaying
+    # Adjust swaying amplitude based on wind scale
 ```
 
-### 3. 交互功能
-- 鼠标悬停显示详细信息
-- 点击台风圆圈查看具体数据
-- 拖拽交互改变视角
+### 3. Interactive Features
+- Mouse hover displays detailed information
+- Click typhoon circles to view specific data
+- Drag interaction to change viewing angle
 
-## 📁 项目结构
+## 📁 Project Structure
 
+```
 typhoon-dandelion/
 ├── typhoon_dandelion.py # Main visualization engine
 ├── data_crawler.py      # HKO data acquisition
@@ -133,30 +130,31 @@ typhoon-dandelion/
 │   ├── animations/      # GIF animations
 │   └── data/            # Processed datasets
 └── logs/                # Application logs
+```
 
-## ⚙️ 配置选项
+## ⚙️ Configuration Options
 
-### 编辑config.yaml 示例
+### Edit config.yaml Example
 ```yaml
 visualization:
   figure:
-    width: 12      # 图形宽度
-    height: 8.5    # 图形高度
-    dpi: 300       # 分辨率
+    width: 12      # Figure width
+    height: 8.5    # Figure height
+    dpi: 300       # Resolution
 
 animation:
-  fps: 30                    # 动画帧率
-  growth_duration: 8.0       # 生长动画时长
+  fps: 30                    # Animation frame rate
+  growth_duration: 8.0       # Growth animation duration
 
 data:
   cache:
-    enabled: true            # 启用缓存
-    expiry: 3600            # 缓存过期时间(秒)
+    enabled: true            # Enable caching
+    expiry: 3600            # Cache expiry time (seconds)
 ```
 
-## 📊 数据格式
+## 📊 Data Format
 
-### 台风数据结构
+### Typhoon Data Structure
 ```json
 {
   "typhoons": [
@@ -176,58 +174,58 @@ data:
 }
 ```
 
-## 🔧 自定义功能
+## 🔧 Customization Features
 
-### 添加新数据源
+### Adding New Data Sources
 ```python
 class CustomCrawler:
     def __init__(self, source_url):
         self.url = source_url
     
     def fetch_data(self):
-        # 实现数据抓取逻辑
+        # Implement data crawling logic
         pass
     
     def parse_data(self, raw_data):
-        # 实现数据解析逻辑
+        # Implement data parsing logic
         pass
 ```
 
-### 修改视觉样式
+### Modifying Visual Styles
 ```python
-# 在 typhoon_dandelion.py 中修改
+# Modify in typhoon_dandelion.py
 colors = {
-    'prediction': '#YOUR_COLOR',  # 自定义颜色
+    'prediction': '#YOUR_COLOR',  # Custom color
     'actual': '#YOUR_COLOR',
     'stem': '#YOUR_COLOR',
     'background': '#YOUR_COLOR'
 }
 ```
 
-## 📄 许可证
+## 📄 License
 
-本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
-## 🤝 贡献指南
+## 🤝 Contributing Guidelines
 
-1. Fork 本仓库
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
+1. Fork this repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## 📞 联系方式
+## 📞 Contact Information
 
-- 项目维护者: [Chen Yifei]
-- 邮箱: 25112646g@connect.polyu.hk
-- 项目链接: https://github.com/yourusername/typhoon-dandelion-viz
+- Project Maintainer: [Chen Yifei]
+- Email: 25112646g@connect.polyu.hk
+- Project Link: https://github.com/yourusername/typhoon-dandelion-viz
 
-## 🙏 致谢
+## 🙏 Acknowledgments
 
-- 香港天文台提供的优质数据服务
-- matplotlib 社区的优秀可视化工具
-- 所有为开源项目做出贡献的开typhoon-dandelion-viz发者
+- Hong Kong Observatory for providing excellent data services
+- matplotlib community for outstanding visualization tools
+- All developers who contribute to open source projects
 
 ---
 
-**注意**: 本项目仅用于数据可视化和教育目的，不应用于实际的台风预警或决策。如需官方台风信息，请访问相关气象部门官网。
+**Note**: This project is for data visualization and educational purposes only and should not be used for actual typhoon warnings or decision-making. For official typhoon information, please visit relevant meteorological department websites.
