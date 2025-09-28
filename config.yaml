@@ -1,0 +1,40 @@
+# Hong Kong Typhoon Dandelion Visualization Configuration
+
+visualization:
+  figure:
+    width: 12
+    height: 8.5
+    dpi: 300
+    background_color: '#FEFAEF'
+  
+  colors:
+    prediction: '#90EE90'    # Light green for predictions
+    actual: '#255751'        # Deep green for actual data
+    stem: '#659B4C'          # Medium green for main stem
+    month_branch: '#EDA071'  # Soft orange for month branches
+    text: '#2C3E50'          # Dark blue-gray for text
+
+animation:
+  fps: 30
+  growth_duration: 8.0
+  swaying_amplitude: 0.1
+  swaying_frequency: 0.5
+
+data:
+  years:
+    start: 2014
+    end: 2024
+  cache:
+    enabled: true
+    expiry: 3600  # seconds
+  sources:
+    primary: "https://data.weather.gov.hk/weatherAPI/"
+    fallback: "https://www.hko.gov.hk/en/publica/pubtc.htm"
+
+typhoon_classification:
+  tropical_depression: [0, 62]
+  tropical_storm: [63, 87]
+  severe_tropical_storm: [88, 117]
+  typhoon: [118, 149]
+  severe_typhoon: [150, 184]
+  super_typhoon: [185, 999]
