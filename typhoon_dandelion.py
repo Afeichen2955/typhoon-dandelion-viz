@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-"""
-Hong Kong Typhoon Dandelion Visualization - Fixed Version
-"""
 
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -18,6 +15,7 @@ from urllib.parse import urljoin
 import time
 import math
 from bs4 import BeautifulSoup
+from data_crawler import HKOTyphoonCrawler
 
 warnings.filterwarnings('ignore')
 
@@ -26,6 +24,7 @@ class TyphoonDandelionViz:
         self.fig = None
         self.ax = None
         self.typhoon_data = []
+        self.crawler = HKOTyphoonCrawler()
         self.colors = {
             'prediction': '#90EE90',    # Light green - prediction data
             'actual': '#255751',        # Deep green - actual data
@@ -50,35 +49,23 @@ class TyphoonDandelionViz:
         self.ax.set_aspect('equal')
         self.ax.axis('off')
         
-    def fetch_hko_publication_data(self, year):
-        """从香港天文台年报获取真实数据"""
-        print(f"📖 从香港天文台年报获取 {year} 年数据...")
+    def fetch_typhoon_data(self, year):
+        """获取台风数据的主要方法"""
+        print(f"📊 获取 {year} 年台风数据...")
         
-        try:
-            # 构建年报URL
-            if year >= 2000:
-                base_url = f"https://www.hko.gov.hk/en/publica/tc/tc{year}"
-                overview_url = f"{base_url}/section2.html"
-            else:
-                print(f"⚠️ {year} 年数据格式较旧，使用模拟数据")
-                return self.generate_simulated_data(year)
-            
-            # 获取年报概览页面
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
-            }
-            
-            response = requests.get(overview_url, headers=headers, timeout=15)
-            
-            if response.status_code == 200:
-                return self.parse_hko_publication(response.text, year)
-            else:
-                print(f"⚠️ 无法访问 {year} 年报，状态码: {response.status_code}")
-                return self.generate_simulated_data(year)
-                
-        except Exception as e:
-            print(f"⚠️ 获取 {year} 年数据时出错: {e}")
-            return self.generate_simulated_data(year)
+        # 检查缓存
+        cache_key = f"typhoon_{year}"
+        if cache_key in self.data_cache:
+            print(f"✅ 使用 {year} 年缓存数据")
+            return self.data_cache[cache_key]
+        
+        # 使用 crawler 获取数据
+        data = self.crawler.fetch_typhoon_data_from_pdf(year)
+        
+        # 缓存数据
+        self.data_cache[cache_key] = data
+        return data
+
     
     def parse_hko_publication(self, html_content, year):
         """解析香港天文台年报HTML内容"""
@@ -167,7 +154,7 @@ class TyphoonDandelionViz:
             return self.data_cache[cache_key]
         
         # 尝试从香港天文台年报获取
-        data = self.fetch_hko_publication_data(year)
+        data = self.crawler.fetch_typhoon_data_from_pdf(year)
         
         # 缓存数据
         self.data_cache[cache_key] = data

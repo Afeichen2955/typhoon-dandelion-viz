@@ -139,7 +139,7 @@ class HKOTyphoonCrawler:
     def create_typhoon_from_name(self, name, year):
         """根据台风名称创建台风数据"""
         # 季节分布概率
-        month_prob = [0.02, 0.02, 0.03, 0.05, 0.08, 0.12, 0.18, 0.22, 0.18, 0.08, 0.03, 0.01]
+        month_prob = [0.02, 0.02, 0.03, 0.05, 0.08, 0.12, 0.17, 0.22, 0.18, 0.08, 0.02, 0.01]  # 概率求和->总和正好是1.00
         month = np.random.choice(range(1, 13), p=month_prob)
         day = np.random.randint(1, 29)
         
