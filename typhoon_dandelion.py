@@ -241,222 +241,222 @@ class TyphoonDandelionViz:
         print(f"✅ 总共收集到 {len(all_data)} 个台风数据")
         return all_data
     
-def calculate_dandelion_positions_v2(self):
-    """按照参考图片重新设计蒲公英结构"""
-    positions = {
-        'stem': {'x': [0], 'y': np.linspace(-8, -1, 30)},  # 更短的主干
-        'years': {},
-        'typhoons': {},
-        'seed_clusters': {}  # 添加种子团簇
-    }
-    
-    # 按年份分组
-    years_data = {}
-    for typhoon in self.typhoon_data:
-        year = typhoon['year']
-        if year not in years_data:
-            years_data[year] = []
-        years_data[year].append(typhoon)
-    
-    years = sorted(years_data.keys())
-    num_years = len(years)
-    
-    # 创建更自然的蒲公英形态
-    for i, year in enumerate(years):
-        # 主要分支 - 不均匀分布，更像真实蒲公英
-        base_angle = 2 * np.pi * i / num_years
-        # 添加随机扰动使分布更自然
-        angle_variation = np.random.uniform(-0.3, 0.3)
-        angle = base_angle + angle_variation
-        
-        # 分支长度也有变化
-        base_radius = 2.5
-        radius_variation = np.random.uniform(0.5, 1.5)
-        radius = base_radius + radius_variation
-        
-        year_x = radius * np.cos(angle)
-        year_y = radius * np.sin(angle)
-        
-        positions['years'][year] = {
-            'x': year_x, 'y': year_y, 'angle': angle, 'radius': radius
+    def calculate_dandelion_positions_v2(self):
+        """按照参考图片重新设计蒲公英结构"""
+        positions = {
+            'stem': {'x': [0], 'y': np.linspace(-8, -1, 30)},  # 更短的主干
+            'years': {},
+            'typhoons': {},
+            'seed_clusters': {}  # 添加种子团簇
         }
         
-        # 为每年的台风创建种子团簇
-        year_typhoons = years_data[year]
-        positions['typhoons'][year] = []
-        positions['seed_clusters'][year] = []
+        # 按年份分组
+        years_data = {}
+        for typhoon in self.typhoon_data:
+            year = typhoon['year']
+            if year not in years_data:
+                years_data[year] = []
+            years_data[year].append(typhoon)
         
-        # 创建种子团簇而不是单独的点
-        cluster_count = min(3, len(year_typhoons))  # 最多3个团簇
+        years = sorted(years_data.keys())
+        num_years = len(years)
         
-        for cluster_idx in range(cluster_count):
-            # 团簇中心位置
-            cluster_angle = angle + (cluster_idx - cluster_count/2) * 0.4
-            cluster_radius = radius + 1.5 + np.random.uniform(0, 1)
+        # 创建更自然的蒲公英形态
+        for i, year in enumerate(years):
+            # 主要分支 - 不均匀分布，更像真实蒲公英
+            base_angle = 2 * np.pi * i / num_years
+            # 添加随机扰动使分布更自然
+            angle_variation = np.random.uniform(-0.3, 0.3)
+            angle = base_angle + angle_variation
             
-            cluster_x = cluster_radius * np.cos(cluster_angle)
-            cluster_y = cluster_radius * np.sin(cluster_angle)
+            # 分支长度也有变化
+            base_radius = 2.5
+            radius_variation = np.random.uniform(0.5, 1.5)
+            radius = base_radius + radius_variation
             
-            # 在团簇中分布台风
-            typhoons_in_cluster = year_typhoons[cluster_idx::cluster_count]
+            year_x = radius * np.cos(angle)
+            year_y = radius * np.sin(angle)
             
-            for j, typhoon in enumerate(typhoons_in_cluster):
-                # 团簇内的小偏移
-                offset_angle = np.random.uniform(0, 2*np.pi)
-                offset_radius = np.random.uniform(0.1, 0.4)
+            positions['years'][year] = {
+                'x': year_x, 'y': year_y, 'angle': angle, 'radius': radius
+            }
+            
+            # 为每年的台风创建种子团簇
+            year_typhoons = years_data[year]
+            positions['typhoons'][year] = []
+            positions['seed_clusters'][year] = []
+            
+            # 创建种子团簇而不是单独的点
+            cluster_count = min(3, len(year_typhoons))  # 最多3个团簇
+            
+            for cluster_idx in range(cluster_count):
+                # 团簇中心位置
+                cluster_angle = angle + (cluster_idx - cluster_count/2) * 0.4
+                cluster_radius = radius + 1.5 + np.random.uniform(0, 1)
                 
-                typhoon_x = cluster_x + offset_radius * np.cos(offset_angle)
-                typhoon_y = cluster_y + offset_radius * np.sin(offset_angle)
+                cluster_x = cluster_radius * np.cos(cluster_angle)
+                cluster_y = cluster_radius * np.sin(cluster_angle)
                 
-                # 种子大小基于强度
-                seed_size = self.calculate_seed_size(typhoon['max_wind_speed'])
+                # 在团簇中分布台风
+                typhoons_in_cluster = year_typhoons[cluster_idx::cluster_count]
                 
-                pos = {
-                    'x': typhoon_x,
-                    'y': typhoon_y,
-                    'size': seed_size,
-                    'typhoon': typhoon,
-                    'cluster_id': cluster_idx
-                }
-                positions['typhoons'][year].append(pos)
-    
-    return positions
+                for j, typhoon in enumerate(typhoons_in_cluster):
+                    # 团簇内的小偏移
+                    offset_angle = np.random.uniform(0, 2*np.pi)
+                    offset_radius = np.random.uniform(0.1, 0.4)
+                    
+                    typhoon_x = cluster_x + offset_radius * np.cos(offset_angle)
+                    typhoon_y = cluster_y + offset_radius * np.sin(offset_angle)
+                    
+                    # 种子大小基于强度
+                    seed_size = self.calculate_seed_size(typhoon['max_wind_speed'])
+                    
+                    pos = {
+                        'x': typhoon_x,
+                        'y': typhoon_y,
+                        'size': seed_size,
+                        'typhoon': typhoon,
+                        'cluster_id': cluster_idx
+                    }
+                    positions['typhoons'][year].append(pos)
+        
+        return positions
 
-def calculate_seed_size(self, wind_speed):
-    """根据风速计算种子大小"""
-    # 更细致的大小分级
-    if wind_speed < 63:
-        return 30
-    elif wind_speed < 88:
-        return 50
-    elif wind_speed < 118:
-        return 80
-    elif wind_speed < 150:
-        return 120
-    elif wind_speed < 185:
-        return 160
-    else:
-        return 200
+    def calculate_seed_size(self, wind_speed):
+        """根据风速计算种子大小"""
+        # 更细致的大小分级
+        if wind_speed < 63:
+            return 30
+        elif wind_speed < 88:
+            return 50
+        elif wind_speed < 118:
+            return 80
+        elif wind_speed < 150:
+            return 120
+        elif wind_speed < 185:
+            return 160
+        else:
+            return 200
 
-def draw_enhanced_dandelion(self):
-    """绘制增强版蒲公英"""
-    self.setup_figure()
-    positions = self.calculate_dandelion_positions_v2()
-    
-    # 绘制主干 - 更粗更自然
-    stem_y = positions['stem']['y']
-    self.ax.plot([0] * len(stem_y), stem_y, 
-                color=self.colors['stem'], linewidth=12, alpha=0.9,
-                solid_capstyle='round')
-    
-    # 绘制年份主分支
-    for year, year_pos in positions['years'].items():
-        # 主分支 - 从主干顶部发出
-        branch_start_y = stem_y[-1]  # 主干顶部
+    def draw_enhanced_dandelion(self):
+        """绘制增强版蒲公英"""
+        self.setup_figure()
+        positions = self.calculate_dandelion_positions_v2()
         
-        # 绘制弯曲的分支
-        branch_x = np.linspace(0, year_pos['x'], 20)
-        branch_y = np.linspace(branch_start_y, year_pos['y'], 20)
-        
-        # 添加自然弯曲
-        curve_factor = 0.3
-        for i in range(len(branch_x)):
-            t = i / (len(branch_x) - 1)
-            branch_y[i] += curve_factor * np.sin(np.pi * t) * year_pos['radius'] * 0.2
-        
-        self.ax.plot(branch_x, branch_y, 
-                    color=self.colors['month_branch'], linewidth=6, alpha=0.8,
+        # 绘制主干 - 更粗更自然
+        stem_y = positions['stem']['y']
+        self.ax.plot([0] * len(stem_y), stem_y, 
+                    color=self.colors['stem'], linewidth=12, alpha=0.9,
                     solid_capstyle='round')
         
-        # 绘制细分支到台风位置
-        if year in positions['typhoons']:
-            for typhoon_pos in positions['typhoons'][year]:
-                # 细分支
-                fine_branch_x = np.linspace(year_pos['x'], typhoon_pos['x'], 10)
-                fine_branch_y = np.linspace(year_pos['y'], typhoon_pos['y'], 10)
-                
-                self.ax.plot(fine_branch_x, fine_branch_y,
-                           color=self.colors['stem'], linewidth=2, alpha=0.7)
-                
-                # 绘制种子
-                typhoon = typhoon_pos['typhoon']
-                color = self.colors['prediction'] if typhoon['is_prediction'] else self.colors['actual']
-                
-                # 种子形状 - 更像真实的蒲公英种子
-                seed_circle = Circle((typhoon_pos['x'], typhoon_pos['y']), 
-                                   typhoon_pos['size']/1000, 
-                                   color=color, alpha=0.8, zorder=3)
-                self.ax.add_patch(seed_circle)
-                
-                # 添加种子的"绒毛"效果
-                self.draw_seed_fluff(typhoon_pos['x'], typhoon_pos['y'], 
-                                   typhoon_pos['size']/1000, color)
-    
-    # 添加信息面板（参考图片的布局）
-    self.add_info_panels()
-    
-    plt.tight_layout()
-    return self.fig
-
-def draw_seed_fluff(self, x, y, radius, color):
-    """绘制种子的绒毛效果"""
-    fluff_count = 8  # 绒毛数量
-    for i in range(fluff_count):
-        angle = 2 * np.pi * i / fluff_count
-        fluff_length = radius * 2
+        # 绘制年份主分支
+        for year, year_pos in positions['years'].items():
+            # 主分支 - 从主干顶部发出
+            branch_start_y = stem_y[-1]  # 主干顶部
+            
+            # 绘制弯曲的分支
+            branch_x = np.linspace(0, year_pos['x'], 20)
+            branch_y = np.linspace(branch_start_y, year_pos['y'], 20)
+            
+            # 添加自然弯曲
+            curve_factor = 0.3
+            for i in range(len(branch_x)):
+                t = i / (len(branch_x) - 1)
+                branch_y[i] += curve_factor * np.sin(np.pi * t) * year_pos['radius'] * 0.2
+            
+            self.ax.plot(branch_x, branch_y, 
+                        color=self.colors['month_branch'], linewidth=6, alpha=0.8,
+                        solid_capstyle='round')
+            
+            # 绘制细分支到台风位置
+            if year in positions['typhoons']:
+                for typhoon_pos in positions['typhoons'][year]:
+                    # 细分支
+                    fine_branch_x = np.linspace(year_pos['x'], typhoon_pos['x'], 10)
+                    fine_branch_y = np.linspace(year_pos['y'], typhoon_pos['y'], 10)
+                    
+                    self.ax.plot(fine_branch_x, fine_branch_y,
+                            color=self.colors['stem'], linewidth=2, alpha=0.7)
+                    
+                    # 绘制种子
+                    typhoon = typhoon_pos['typhoon']
+                    color = self.colors['prediction'] if typhoon['is_prediction'] else self.colors['actual']
+                    
+                    # 种子形状 - 更像真实的蒲公英种子
+                    seed_circle = Circle((typhoon_pos['x'], typhoon_pos['y']), 
+                                    typhoon_pos['size']/1000, 
+                                    color=color, alpha=0.8, zorder=3)
+                    self.ax.add_patch(seed_circle)
+                    
+                    # 添加种子的"绒毛"效果
+                    self.draw_seed_fluff(typhoon_pos['x'], typhoon_pos['y'], 
+                                    typhoon_pos['size']/1000, color)
         
-        start_x = x + radius * 0.8 * np.cos(angle)
-        start_y = y + radius * 0.8 * np.sin(angle)
-        end_x = x + fluff_length * np.cos(angle)
-        end_y = y + fluff_length * np.sin(angle)
+        # 添加信息面板（参考图片的布局）
+        self.add_info_panels()
         
-        self.ax.plot([start_x, end_x], [start_y, end_y], 
-                    color=color, linewidth=0.5, alpha=0.6)
+        plt.tight_layout()
+        return self.fig
 
-def add_info_panels(self):
-    """添加信息面板（仿照参考图片）"""
-    # 主标题
-    self.ax.text(0, 7, 'Hong Kong Typhoon Dandelion', 
-                fontsize=24, fontweight='bold', 
-                color=self.colors['text'], ha='center')
-    
-    self.ax.text(0, 6.3, '2014-2024 Tropical Cyclone Data Visualization', 
-                fontsize=14, color=self.colors['text'], ha='center', style='italic')
-    
-    # 左侧信息面板
-    info_text = """
-    Although typhoons bring destruction, 
-    this visualization represents the 
-    natural cycles and patterns of 
-    tropical cyclone formation in the 
-    Western Pacific, showing how these 
-    meteorological phenomena distribute 
-    across time like seeds on the wind.
-    """
-    
-    self.ax.text(-6.5, 4, info_text, fontsize=10, 
-                color=self.colors['text'], ha='left', va='top',
-                bbox=dict(boxstyle="round,pad=0.5", facecolor='white', alpha=0.8))
-    
-    # 右下角统计信息
-    total_typhoons = len(self.typhoon_data)
-    years_span = "2014-2024"
-    
-    stats_text = f"""
-    Total Tropical Cyclones: {total_typhoons}
-    Time Period: {years_span}
-    Data Source: Hong Kong Observatory
-    Visualization: Dandelion Seed Dispersion Model
-    """
-    
-    self.ax.text(6.5, -6, stats_text, fontsize=9,
-                color=self.colors['text'], ha='right', va='bottom',
-                bbox=dict(boxstyle="round,pad=0.5", facecolor='white', alpha=0.8))
-    
+    def draw_seed_fluff(self, x, y, radius, color):
+        """绘制种子的绒毛效果"""
+        fluff_count = 8  # 绒毛数量
+        for i in range(fluff_count):
+            angle = 2 * np.pi * i / fluff_count
+            fluff_length = radius * 2
+            
+            start_x = x + radius * 0.8 * np.cos(angle)
+            start_y = y + radius * 0.8 * np.sin(angle)
+            end_x = x + fluff_length * np.cos(angle)
+            end_y = y + fluff_length * np.sin(angle)
+            
+            self.ax.plot([start_x, end_x], [start_y, end_y], 
+                        color=color, linewidth=0.5, alpha=0.6)
+
+    def add_info_panels(self):
+        """添加信息面板（仿照参考图片）"""
+        # 主标题
+        self.ax.text(0, 7, 'Hong Kong Typhoon Dandelion', 
+                    fontsize=24, fontweight='bold', 
+                    color=self.colors['text'], ha='center')
+        
+        self.ax.text(0, 6.3, '2014-2024 Tropical Cyclone Data Visualization', 
+                    fontsize=14, color=self.colors['text'], ha='center', style='italic')
+        
+        # 左侧信息面板
+        info_text = """
+        Although typhoons bring destruction, 
+        this visualization represents the 
+        natural cycles and patterns of 
+        tropical cyclone formation in the 
+        Western Pacific, showing how these 
+        meteorological phenomena distribute 
+        across time like seeds on the wind.
+        """
+        
+        self.ax.text(-6.5, 4, info_text, fontsize=10, 
+                    color=self.colors['text'], ha='left', va='top',
+                    bbox=dict(boxstyle="round,pad=0.5", facecolor='white', alpha=0.8))
+        
+        # 右下角统计信息
+        total_typhoons = len(self.typhoon_data)
+        years_span = "2014-2024"
+        
+        stats_text = f"""
+        Total Tropical Cyclones: {total_typhoons}
+        Time Period: {years_span}
+        Data Source: Hong Kong Observatory
+        Visualization: Dandelion Seed Dispersion Model
+        """
+        
+        self.ax.text(6.5, -6, stats_text, fontsize=9,
+                    color=self.colors['text'], ha='right', va='bottom',
+                    bbox=dict(boxstyle="round,pad=0.5", facecolor='white', alpha=0.8))
+        
     def draw_static_dandelion(self):
         """绘制静态蒲公英可视化"""
         self.setup_figure()
-        positions = self.calculate_dandelion_positions()
+        positions = self.calculate_dandelion_positions_v2()
         
         # 绘制主干
         stem_x = positions['stem']['x']
@@ -551,7 +551,7 @@ def add_info_panels(self):
     def create_growth_animation(self, duration=8.0, fps=30):
         """创建生长动画 - 修复版本"""
         self.setup_figure()
-        positions = self.calculate_dandelion_positions()
+        positions = self.calculate_dandelion_positions_v2()
         
         frames = int(duration * fps)
         
@@ -691,6 +691,176 @@ def add_info_panels(self):
         self.ax.set_aspect('equal')
         self.ax.axis('off')
 
+    def create_interactive_animation(self):
+        """创建交互式摇曳动画"""
+        self.setup_figure()
+        positions = self.calculate_dandelion_positions_v2()
+        
+        # 初始化动画状态
+        self.mouse_x = 0
+        self.mouse_y = 0
+        self.branch_velocities = {}
+        self.time = 0
+        
+        # 为每个分支初始化摆动参数
+        for year in positions['years'].keys():
+            self.branch_velocities[year] = {
+                'phase': np.random.uniform(0, 2*np.pi),
+                'amplitude': np.random.uniform(0.15, 0.35),
+                'frequency': np.random.uniform(0.8, 1.5)
+            }
+        
+        # 连接鼠标事件
+        self.fig.canvas.mpl_connect('motion_notify_event', self.on_mouse_move)
+        
+        def animate(frame):
+            self.ax.clear()
+            self.ax.set_xlim(-10, 10)
+            self.ax.set_ylim(-10, 10)
+            self.ax.set_aspect('equal')
+            self.ax.axis('off')
+            self.ax.set_facecolor(self.colors['background'])
+            
+            self.time = frame * 0.05
+            self.draw_swaying_dandelion(positions)
+            return []
+        
+        anim = animation.FuncAnimation(
+            self.fig, animate, frames=np.arange(0, 1000),
+            interval=50, blit=False, repeat=True
+        )
+        return anim
+    
+    def on_mouse_move(self, event):
+        """鼠标移动事件处理"""
+        if event.indata:
+            self.mouse_x = event.xdata if event.xdata else 0
+            self.mouse_y = event.ydata if event.ydata else 0
+    
+    def calculate_sway_offset(self, year, base_x, base_y):
+        """计算摆动偏移量"""
+        params = self.branch_velocities[year]
+        
+        # 基础风摆效果
+        wind_sway_x = params['amplitude'] * np.sin(
+            self.time * params['frequency'] + params['phase']
+        )
+        wind_sway_y = params['amplitude'] * 0.3 * np.cos(
+            self.time * params['frequency'] * 1.3 + params['phase']
+        )
+        
+        # 鼠标交互效果
+        mouse_dist = np.sqrt((base_x - self.mouse_x)**2 + (base_y - self.mouse_y)**2)
+        if mouse_dist < 3:
+            influence = np.exp(-mouse_dist / 1.5)
+            mouse_push_x = (base_x - self.mouse_x) * influence * 0.8
+            mouse_push_y = (base_y - self.mouse_y) * influence * 0.8
+        else:
+            mouse_push_x = 0
+            mouse_push_y = 0
+        
+        return wind_sway_x + mouse_push_x, wind_sway_y + mouse_push_y
+    
+    def draw_tapered_branch(self, x_points, y_points, start_width, end_width, color, alpha=0.8):
+        """绘制渐变粗细的枝干"""
+        n_segments = len(x_points) - 1
+        
+        for i in range(n_segments):
+            t = i / n_segments
+            width = start_width * (1 - t) + end_width * t
+            
+            self.ax.plot(
+                [x_points[i], x_points[i+1]], 
+                [y_points[i], y_points[i+1]],
+                color=color, linewidth=width, alpha=alpha,
+                solid_capstyle='round'
+            )
+    
+    def draw_swaying_dandelion(self, positions):
+        """绘制摇曳的蒲公英"""
+        # 主干（不动）
+        stem_y = positions['stem']['y']
+        self.ax.plot([0] * len(stem_y), stem_y,
+                    color=self.colors['stem'], linewidth=12, alpha=0.9,
+                    solid_capstyle='round', zorder=1)
+        
+        # 摇曳的分支
+        for year, year_pos in positions['years'].items():
+            sway_x, sway_y = self.calculate_sway_offset(year, year_pos['x'], year_pos['y'])
+            swayed_x = year_pos['x'] + sway_x
+            swayed_y = year_pos['y'] + sway_y
+            
+            # 主分支
+            branch_start_y = stem_y[-1]
+            n_points = 30
+            branch_x = np.linspace(0, swayed_x, n_points)
+            branch_y = np.linspace(branch_start_y, swayed_y, n_points)
+            
+            for i in range(len(branch_x)):
+                t = i / (len(branch_x) - 1)
+                curve = 0.3 * np.sin(np.pi * t) * year_pos['radius'] * 0.2
+                branch_y[i] += curve + sway_y * 0.3 * t
+                branch_x[i] += sway_x * 0.3 * t
+            
+            self.draw_tapered_branch(branch_x, branch_y, 8, 2, 
+                                    self.colors['month_branch'], 0.8)
+            
+            # 细枝和种子
+            if year in positions['typhoons']:
+                for typhoon_pos in positions['typhoons'][year]:
+                    typhoon_sway_x = sway_x * 1.5
+                    typhoon_sway_y = sway_y * 1.5
+                    final_x = typhoon_pos['x'] + typhoon_sway_x
+                    final_y = typhoon_pos['y'] + typhoon_sway_y
+                    
+                    n_fine = 15
+                    fine_x = np.linspace(swayed_x, final_x, n_fine)
+                    fine_y = np.linspace(swayed_y, final_y, n_fine)
+                    
+                    for i in range(len(fine_x)):
+                        t = i / (len(fine_x) - 1)
+                        wobble = 0.15 * np.sin(self.time * 2 + typhoon_pos['x'] * 5) * t
+                        fine_x[i] += wobble
+                        fine_y[i] += wobble * 0.5
+                    
+                    self.draw_tapered_branch(fine_x, fine_y, 2, 0.5,
+                                            self.colors['stem'], 0.7)
+                    
+                    # 种子
+                    typhoon = typhoon_pos['typhoon']
+                    color = (self.colors['prediction'] if typhoon['is_prediction'] 
+                            else self.colors['actual'])
+                    
+                    seed_wobble = 0.05 * np.sin(self.time * 3 + final_x * 10)
+                    seed_x = final_x + seed_wobble
+                    seed_y = final_y + seed_wobble * 0.5
+                    
+                    seed_circle = Circle((seed_x, seed_y), typhoon_pos['size']/1000,
+                                        color=color, alpha=0.8, zorder=3)
+                    self.ax.add_patch(seed_circle)
+                    
+                    self.draw_swaying_fluff(seed_x, seed_y, 
+                                          typhoon_pos['size']/1000, color)
+        
+        self.add_info_panels()
+    
+    def draw_swaying_fluff(self, x, y, radius, color):
+        """绘制摇曳的绒毛"""
+        fluff_count = 8
+        for i in range(fluff_count):
+            base_angle = 2 * np.pi * i / fluff_count
+            angle_wobble = 0.2 * np.sin(self.time * 2.5 + i)
+            angle = base_angle + angle_wobble
+            fluff_length = radius * 2
+            
+            start_x = x + radius * 0.8 * np.cos(angle)
+            start_y = y + radius * 0.8 * np.sin(angle)
+            end_x = x + fluff_length * np.cos(angle)
+            end_y = y + fluff_length * np.sin(angle)
+            
+            self.ax.plot([start_x, end_x], [start_y, end_y],
+                        color=color, linewidth=0.5, alpha=0.6)
+
 def main():
     """主执行函数"""
     print("🌪️ 启动香港台风蒲公英可视化...")
@@ -703,7 +873,7 @@ def main():
     
     # 创建静态可视化
     print("🎨 创建静态可视化...")
-    fig = viz.draw_static_dandelion()
+    fig = viz.draw_enhanced_dandelion() 
     viz.save_visualization('typhoon_dandelion_2014_2024.png')
     
     # 尝试创建生长动画
